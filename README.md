@@ -2,6 +2,8 @@
 
 A [Steel](https://github.com/mattwparas/steel) plugin for Helix that sends the current file or selected lines to an AI agent running in another terminal, like [sidekick.nvim](https://github.com/folke/sidekick.nvim).
 
+![Attaching Helix to one of two Claude Code sessions in tmux and sending it a file and a selection](demo/demo.gif)
+
 - Agents: [Claude Code](https://claude.com/claude-code)
 - Terminal multiplexers (muxes): [tmux](https://github.com/tmux/tmux), [herdr-app](https://herdr.dev)
 
