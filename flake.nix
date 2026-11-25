@@ -1,5 +1,5 @@
 {
-  description = "sidekick.hx: send files and lines from Helix to AI agents in tmux or herdr-app";
+  description = "sidekick.hx: send files and lines from Helix to AI agents in tmux, rex or herdr-app";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/release-26.05";

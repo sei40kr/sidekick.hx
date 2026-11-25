@@ -14,6 +14,7 @@
 (require "sidekick/mux.scm")
 (require "sidekick/agent/claude.scm")
 (require "sidekick/mux/herdr-app.scm")
+(require "sidekick/mux/rex.scm")
 (require "sidekick/mux/tmux.scm")
 
 (provide sidekick-send-file
@@ -28,7 +29,7 @@
 (define *agents* (hash "claude" claude-agent))
 (define *agent* "claude")
 ;; (name . mux) pairs, in the order their terminals are listed.
-(define *muxes* (list (cons "tmux" tmux-mux) (cons "herdr-app" herdr-app-mux)))
+(define *muxes* (list (cons "tmux" tmux-mux) (cons "rex" rex-mux) (cons "herdr-app" herdr-app-mux)))
 ;; Name of the mux new agents start in, or #f to choose by where helix runs.
 (define *mux* #f)
 ;; The terminal chosen with sidekick-attach, a hash of 'mux and 'target, or #f
@@ -76,13 +77,17 @@
 ;;@doc
 ;; Choose the terminal multiplexer agents start in
 ;;
-;; Takes the name it was registered with. Defaults to "tmux" inside tmux and
-;; "herdr-app" otherwise. Sends reach agents in every running mux either way.
+;; Takes the name it was registered with. Defaults to "tmux" inside tmux, "rex"
+;; inside rex and "herdr-app" otherwise. Sends reach agents in every running mux either way.
 (define (sidekick-set-mux! name)
   (set! *mux* name))
 
 (define (start-mux-name)
-  (or *mux* (if (inside-tmux?) "tmux" "herdr-app")))
+  (or *mux*
+      (cond
+        [(inside-tmux?) "tmux"]
+        [(inside-rex?) "rex"]
+        [else "herdr-app"])))
 
 (define (lookup-mux name)
   (define p (find-first (lambda (p) (equal? (car p) name)) *muxes*))

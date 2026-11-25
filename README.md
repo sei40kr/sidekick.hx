@@ -5,7 +5,7 @@ A [Steel](https://github.com/mattwparas/steel) plugin for Helix that sends the c
 ![Attaching Helix to one of two Claude Code sessions in tmux and sending it a file and a selection](demo/demo.gif)
 
 - Agents: [Claude Code](https://claude.com/claude-code)
-- Terminal multiplexers (muxes): [tmux](https://github.com/tmux/tmux), [herdr-app](https://herdr.dev)
+- Terminal multiplexers (muxes): [tmux](https://github.com/tmux/tmux), rex, [herdr-app](https://herdr.dev)
 
 Both are pluggable; see [Extending](#extending).
 
@@ -15,7 +15,7 @@ Both are pluggable; see [Extending](#extending).
 
 ## Setup
 
-Requires a Helix build with Steel, and `tmux`, or `hc` and `herdr-app` for herdr-app, on `PATH`.
+Requires a Helix build with Steel, and `tmux`, `rex`, or `hc` and `herdr-app` for herdr-app, on `PATH`.
 
 ```scheme
 ;; helix.scm
@@ -41,10 +41,10 @@ Requires a Helix build with Steel, and `tmux`, or `hc` and `herdr-app` for herdr
 | --- | --- |
 | `:sidekick-send-file` | Types a mention of the current file, such as `@src/main.rs`, into the agent's prompt. |
 | `:sidekick-send-selection` | Types a mention of the lines each selection covers, such as `@src/main.rs#L10-20`, into the agent's prompt. Multiple selections become multiple mentions. |
-| `:sidekick-attach [target]` | Chooses the terminal sends go to. With a target, such as a tmux pane `%3` or a herdr-app terminal `t9f`, attaches to it. Without one, opens a picker of the terminals running the agent plus `+ new`, which starts the agent beside Helix. Starts the agent right away when none is running. |
+| `:sidekick-attach [target]` | Chooses the terminal sends go to. With a target, such as a tmux pane `%3`, a rex block `block:01a2…` or a herdr-app terminal `t9f`, attaches to it. Without one, opens a picker of the terminals running the agent plus `+ new`, which starts the agent beside Helix. Starts the agent right away when none is running. |
 | `:sidekick-detach` | Forgets the attached terminal. |
 
-sidekick finds agents in every running mux, so an agent in tmux and one in herdr-app can both be picked even when one mux runs inside the other. Until you attach, sends go to the agent's terminal whose working directory is Helix's. Paths in mentions are relative to the agent's working directory when the file is inside it, and absolute otherwise.
+sidekick finds agents in every running mux, so agents in tmux, rex and herdr-app can all be picked even when one mux runs inside another. Until you attach, sends go to the agent's terminal whose working directory is Helix's. Paths in mentions are relative to the agent's working directory when the file is inside it, and absolute otherwise.
 
 > [!WARNING]
 > herdr-app has no way to type text into a terminal without pressing Enter: `hc send` always submits it.
@@ -72,10 +72,10 @@ The built-in agent is `"claude"`, in [`sidekick/agent/claude.scm`](sidekick/agen
 
 ### Muxes
 
-New agents start in tmux inside tmux and in herdr-app otherwise. To start them elsewhere:
+New agents start in tmux inside tmux, in rex inside rex and in herdr-app otherwise. To start them elsewhere:
 
 ```scheme
 (sidekick-set-mux! "herdr-app")
 ```
 
-`sidekick-register-mux!` adds a mux; its docstring describes the functions it takes. The built-in muxes are in [`sidekick/mux/tmux.scm`](sidekick/mux/tmux.scm) and [`sidekick/mux/herdr-app.scm`](sidekick/mux/herdr-app.scm).
+`sidekick-register-mux!` adds a mux; its docstring describes the functions it takes. The built-in muxes are in [`sidekick/mux/tmux.scm`](sidekick/mux/tmux.scm), [`sidekick/mux/rex.scm`](sidekick/mux/rex.scm) and [`sidekick/mux/herdr-app.scm`](sidekick/mux/herdr-app.scm).
